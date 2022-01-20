@@ -3,12 +3,10 @@ package uz.jamshid;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.MessageEntity;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
@@ -40,20 +38,42 @@ public class ReportBot extends TelegramLongPollingBot {
                     sendMessage.setParseMode(ParseMode.MARKDOWN);
                     sendMessage.setChatId(String.valueOf(message.getChatId()));
 
-                    InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+                    ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+                    replyKeyboardMarkup.setResizeKeyboard(true);
+                    replyKeyboardMarkup.setOneTimeKeyboard(true);
 
-                    List<List<InlineKeyboardButton>> inlineKeyboardButtons = new ArrayList<>();
-                    List<InlineKeyboardButton> inlineKeyboardButtonList = new ArrayList<>();
 
-                    InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton();
-                    inlineKeyboardButton.setText("Agent balance report");
-                    inlineKeyboardButton.setCallbackData("Agent balance report");
+                    List<KeyboardRow> keyboardRowList = new ArrayList<>();
 
-                    inlineKeyboardButtonList.add(inlineKeyboardButton);
-                    inlineKeyboardButtons.add(inlineKeyboardButtonList);
-                    inlineKeyboardMarkup.setKeyboard(inlineKeyboardButtons);
+                    KeyboardRow keyboardRow = new KeyboardRow();
+                    keyboardRow.add("Agent balance report");
 
-                    sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+                    keyboardRowList.add(keyboardRow);
+                    replyKeyboardMarkup.setKeyboard(keyboardRowList);
+
+                    sendMessage.setReplyMarkup(replyKeyboardMarkup);
+                    try {
+                        execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                } else if (text.equals("Agent balance report")) {
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setParseMode(ParseMode.MARKDOWN);
+                    sendMessage.setChatId(String.valueOf(message.getChatId()));
+
+                    ArrayList<Integer> balanceList = new ArrayList<>();
+                    for (int i = 1000; i < 1020; i++) {
+                        balanceList.add(i);
+                    }
+
+                    String balance = "";
+                    for (int i = 1; i < 21; i++) {
+                        balance += i + " agent's balance is $" + balanceList.get(i - 1) + "\n";
+                    }
+
+                    sendMessage.setText(balance);
+
                     try {
                         execute(sendMessage);
                     } catch (TelegramApiException e) {
@@ -61,30 +81,6 @@ public class ReportBot extends TelegramLongPollingBot {
                     }
                 }
             }
-        } else if (update.hasCallbackQuery()) {
-            Message message = update.getCallbackQuery().getMessage();
-            CallbackQuery callbackQuery = new CallbackQuery();
-            String data = callbackQuery.getData();
-
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setParseMode(ParseMode.MARKDOWN);
-            sendMessage.setChatId(String.valueOf(message.getChatId()));
-
-            ArrayList<Integer> balanceList = new ArrayList<>();
-            for (int i = 1000; i < 1020; i++) {
-                balanceList.add(i);
-            }
-            String balance = "";
-            for (int i = 1; i < 21; i++) {
-                balance += i + " agent's balance is $" + balanceList.get(i - 1) + "\n";
-            }
-            sendMessage.setText(String.valueOf(balance));
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
-
         }
     }
 }
