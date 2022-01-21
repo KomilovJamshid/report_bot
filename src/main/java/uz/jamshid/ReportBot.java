@@ -14,17 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReportBot extends TelegramLongPollingBot {
-    private String username = "report_test_blabla_bot";
-    private String token = "5227121580:AAFC5c0BNKUfnpPD7-5JwIWUdYHCP7nFTUA";
-
     @Override
     public String getBotUsername() {
-        return username;
+        return "report_test_blabla_bot";
     }
 
     @Override
     public String getBotToken() {
-        return token;
+        return "*";
     }
 
     @Override
