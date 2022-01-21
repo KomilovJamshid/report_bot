@@ -21,7 +21,7 @@ public class ReportBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "*";
+        return "5227121580:AAFC5c0BNKUfnpPD7-5JwIWUdYHCP7nFTUA";
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ReportBot extends TelegramLongPollingBot {
                 if (text.equals("/start")) {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setText("Welcome to OSON report bot!");
-                    sendMessage.setParseMode(ParseMode.MARKDOWN);
+                    sendMessage.setParseMode(ParseMode.HTML);
                     sendMessage.setChatId(String.valueOf(message.getChatId()));
 
                     ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -66,29 +66,7 @@ public class ReportBot extends TelegramLongPollingBot {
                     }
                 } else if (text.equals("Agent balance")) {
                     SendMessage sendMessage = new SendMessage();
-                    sendMessage.setParseMode(ParseMode.MARKDOWN);
-                    sendMessage.setChatId(String.valueOf(message.getChatId()));
-
-                    ArrayList<Integer> balanceList = new ArrayList<>();
-                    for (int i = 1000; i < 1020; i++) {
-                        balanceList.add(i);
-                    }
-
-                    String balance = "";
-                    for (int i = 1; i < 21; i++) {
-                        balance += i + " agent's balance is $" + balanceList.get(i - 1) + "\n";
-                    }
-
-                    sendMessage.setText(balance);
-
-                    try {
-                        execute(sendMessage);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
-                } else if (text.equals("Merchant balance")) {
-                    SendMessage sendMessage = new SendMessage();
-                    sendMessage.setParseMode(ParseMode.MARKDOWN);
+                    sendMessage.setParseMode(ParseMode.HTML);
                     sendMessage.setChatId(String.valueOf(message.getChatId()));
 
                     ArrayList<Integer> balanceList = new ArrayList<>();
@@ -98,7 +76,45 @@ public class ReportBot extends TelegramLongPollingBot {
 
                     StringBuilder balance = new StringBuilder();
                     for (int i = 1; i < 21; i++) {
-                        balance.append(i).append(" merchant's balance is $").append(balanceList.get(i - 1)).append("\n");
+                        balance
+                                .append("<b>")
+                                .append(i)
+                                .append("</b>")
+                                .append(" agent's balance is $")
+                                .append("<b>")
+                                .append(balanceList.get(i - 1))
+                                .append("</b>")
+                                .append("\n\n");
+                    }
+
+                    sendMessage.setText(balance.toString());
+
+                    try {
+                        execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                } else if (text.equals("Merchant balance")) {
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setParseMode(ParseMode.HTML);
+                    sendMessage.setChatId(String.valueOf(message.getChatId()));
+
+                    ArrayList<Integer> balanceList = new ArrayList<>();
+                    for (int i = 1000; i < 1020; i++) {
+                        balanceList.add(i);
+                    }
+
+                    StringBuilder balance = new StringBuilder();
+                    for (int i = 1; i < 21; i++) {
+                        balance
+                                .append("<b>")
+                                .append(i)
+                                .append("</b>")
+                                .append(" merchant's balance is $")
+                                .append("<b>")
+                                .append(balanceList.get(i - 1))
+                                .append("</b>")
+                                .append("\n\n");
                     }
 
                     sendMessage.setText(balance.toString());
