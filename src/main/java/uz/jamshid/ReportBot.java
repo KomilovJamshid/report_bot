@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -42,22 +43,31 @@ public class ReportBot extends TelegramLongPollingBot {
                     replyKeyboardMarkup.setResizeKeyboard(true);
                     replyKeyboardMarkup.setOneTimeKeyboard(true);
 
-
                     List<KeyboardRow> keyboardRowList = new ArrayList<>();
-
                     KeyboardRow keyboardRow = new KeyboardRow();
-                    keyboardRow.add("Agent balance report");
+
+                    KeyboardButton keyboardButton1 = new KeyboardButton();
+                    keyboardButton1.setText("Agent balance");
+
+                    KeyboardButton keyboardButton2 = new KeyboardButton();
+                    keyboardButton2.setText("Merchant balance");
+
+                    keyboardRow.add(keyboardButton1);
+                    keyboardRow.add(keyboardButton2);
 
                     keyboardRowList.add(keyboardRow);
+
                     replyKeyboardMarkup.setKeyboard(keyboardRowList);
 
                     sendMessage.setReplyMarkup(replyKeyboardMarkup);
+
+
                     try {
                         execute(sendMessage);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
-                } else if (text.equals("Agent balance report")) {
+                } else if (text.equals("Agent balance")) {
                     SendMessage sendMessage = new SendMessage();
                     sendMessage.setParseMode(ParseMode.MARKDOWN);
                     sendMessage.setChatId(String.valueOf(message.getChatId()));
@@ -73,6 +83,28 @@ public class ReportBot extends TelegramLongPollingBot {
                     }
 
                     sendMessage.setText(balance);
+
+                    try {
+                        execute(sendMessage);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                } else if (text.equals("Merchant balance")) {
+                    SendMessage sendMessage = new SendMessage();
+                    sendMessage.setParseMode(ParseMode.MARKDOWN);
+                    sendMessage.setChatId(String.valueOf(message.getChatId()));
+
+                    ArrayList<Integer> balanceList = new ArrayList<>();
+                    for (int i = 1000; i < 1020; i++) {
+                        balanceList.add(i);
+                    }
+
+                    StringBuilder balance = new StringBuilder();
+                    for (int i = 1; i < 21; i++) {
+                        balance.append(i).append(" merchant's balance is $").append(balanceList.get(i - 1)).append("\n");
+                    }
+
+                    sendMessage.setText(balance.toString());
 
                     try {
                         execute(sendMessage);
